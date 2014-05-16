@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<ul>Post
+    <br>
+    <hr>
+    <li>{{ entry.title }} by <b>{{ entry.author.username }}</b></li>
+    <ul>
+        <li>Content: {{ entry.content }}</li>
+        <ul>
+           {% for com in comments %}
+           <li>{{ com.comments }} by {{ com.author.username }}<li>
+           {% endfor %} 
+       </ul>
+   </ul>
+</ul>
+
+{% endblock %}

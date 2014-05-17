@@ -6,12 +6,25 @@
     <li>{{ entry.title }} by <b>{{ entry.author.username }}</b></li>
     <ul>
         <li>Content: {{ entry.content }}</li>
+        <li>COMMENTS:</li>
         <ul>
            {% for com in comments %}
-           <li>{{ com.comments }} by {{ com.author.username }}<li>
+           <li>{{ com.comment }} by {{ com.author.username }}</li>
            {% endfor %} 
        </ul>
    </ul>
 </ul>
-
+{% if session['user'] %}
+{% block comments %}
+<form method='POST'>
+    <label>Comment:<br>
+        <textarea name='comment' rows='10' cols='60'></textarea>
+    </label>
+    <br>
+    {{ error }}
+    <br>
+    <input type='submit'>
+</form>
+{% endblock %}
+{% endif %}
 {% endblock %}

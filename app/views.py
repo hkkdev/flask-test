@@ -140,14 +140,47 @@ def newpost():
             return redirect(url_for('home'))
         return render_template('newpost.html')
 
-@app.route('/post/<post_id>')
+@app.route('/post/<post_id>', methods = ['GET', 'POST'])
 def entry(post_id):
-    ent = Posts.query.filter_by(id=post_id).first()
-    com = Comments.query.filter_by(post_id=ent.id).all()
-    if ent:
-        return render_template('single_post.html', entry = ent, com = com)
+    if request.method == 'POST':
+        comment = request.form['comment']
+        if not comment:
+            ent = Posts.query.filter_by(id=post_id).first()
+            if ent:
+                com = Comments.query.filter_by(post_id=ent.id).all()
+                return render_template('single_post.html', 
+                                       entry = ent, 
+                                       com = com,
+                                       error = 'Invalid comment')
+            else:
+                flash('Invalid post')
+                return redirect(url_for('home'))
+        else:
+            u = User.query.filter_by(username=session['user']).first()
+            p = Posts.query.filter_by(id=post_id).first()
+            c = Comments(comment = comment,
+                         post = p,
+                         author = u)
+            db.session.add(c)
+            db.session.commit()
+            ent = Posts.query.filter_by(id=post_id).first()
+            com = Comments.query.filter_by(post_id=ent.id).all()
+            print com
+            return render_template('single_post.html', 
+                                   entry = ent,
+                                   comments = com)
+            
+
     else:
-        return redirect(url_for('home'))
+        ent = Posts.query.filter_by(id=post_id).first()
+        if ent:
+            com = Comments.query.filter_by(post_id=ent.id).all()
+            return render_template('single_post.html', 
+                                   entry = ent, 
+                                   comments = com)
+        else:
+            flash('Invalid post')
+            return redirect(url_for('home'))
 
 
 

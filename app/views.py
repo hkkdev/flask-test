@@ -1,11 +1,21 @@
 # views.py
 
+from flask.ext.login import LoginManager, login_user, login_required
 from flask import Flask, request, session, g, redirect, url_for, \
                   render_template, flash
 from app import app
 from werkzeug.security import generate_password_hash, \
                               check_password_hash
 from models import *
+from forms import LoginForm
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+@login_manager.user_loader
+def load_user(userid):
+    return User.query.get(int(userid))
 
 # some functions
 def check_password(password, entered):
@@ -19,6 +29,23 @@ def home():
     # list posts
     posts = Posts.query.limit(10)
     return render_template('home.html', posts = posts)
+
+@app.route('/loginwtf', methods=['Get', 'Post'])
+def loginwtf():
+    form = LoginForm()
+    if form.validate_on_submit():
+        username = form.username.data
+        user = User.query.filter_by(username=username).first()
+        login_user(user)
+        flash('logged in successfully')
+        return redirect(url_for('home'))
+    return render_template('loginwtf.html', form=form)
+
+@app.route('/testing')
+@login_required
+def testinglogin():
+    return "login works"
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -145,16 +172,10 @@ def entry(post_id):
     if request.method == 'POST':
         comment = request.form['comment']
         if not comment:
-            ent = Posts.query.filter_by(id=post_id).first()
-            if ent:
-                com = Comments.query.filter_by(post_id=ent.id).all()
-                return render_template('single_post.html', 
-                                       entry = ent, 
-                                       com = com,
-                                       error = 'Invalid comment')
-            else:
-                flash('Invalid post')
-                return redirect(url_for('home'))
+            flash('Invalid comment')
+            return redirect(url_for('entry', post_id=post_id))
+
+        # valid comment adding to Comments
         else:
             u = User.query.filter_by(username=session['user']).first()
             p = Posts.query.filter_by(id=post_id).first()
@@ -171,7 +192,9 @@ def entry(post_id):
                                    comments = com)
             
 
+    # GET
     else:
+        g.test = 1
         ent = Posts.query.filter_by(id=post_id).first()
         if ent:
             com = Comments.query.filter_by(post_id=ent.id).all()

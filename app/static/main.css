@@ -1,0 +1,35 @@
+body {
+    margin-left: 1em;
+}
+
+div {
+    margin-left: 2em;
+}
+
+#title {
+    text-decoration: none;
+    color: black;
+    margin-left: 1em;
+    float: left;
+}
+
+.user {
+    text-decoration: none;
+    color: #1a1a1a;
+    float: right;
+    text-align: right;
+    margin-right: 2em;
+}
+
+hr {
+    clear: both;
+}
+
+ul {
+    list-style-type: none;
+}
+
+#flash {
+    margin-left: 1em;
+    clear: both;
+}

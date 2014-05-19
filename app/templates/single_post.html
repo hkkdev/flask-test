@@ -1,12 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
-<ul>Post
-    <br>
+<ul>
     <hr>
     <li>{{ entry.title }} by <b>{{ entry.author.username }}</b></li>
     <ul>
-        <li>Content: {{ entry.content }}</li>
-        <li>COMMENTS:</li>
+        <li>{{ entry.content }}</li>
         <ul>
            {% for com in comments %}
            <li>{{ com.comment }} by {{ com.author.username }}</li>
@@ -16,6 +14,7 @@
 </ul>
 {% if session['user'] %}
 {% block comments %}
+<div>
 <form method='POST'>
     <label>Comment:<br>
         <textarea name='comment' rows='10' cols='60'></textarea>
@@ -25,6 +24,7 @@
     <br>
     <input type='submit'>
 </form>
+</div>
 {% endblock %}
 {% endif %}
 {% endblock %}

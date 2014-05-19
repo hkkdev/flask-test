@@ -3,18 +3,24 @@
     <title>BULLPEN</title>
 </head>
 <body>
-    <h1><a href='/'>BULLPEN</a></h1>
-    {% if session['logged_in']  %}
-    <p>logged in as {{ session['user'] }}</p>
-    <p><a href='/logout'>logout</a></p>
-    <p><a href='/newpost'>New Post</a></p>
-    {% else %}
-    <p><a href='/login'>login</a></p>
-    <p><a href='/signup'>Sign up</a></p>
-    {% endif %}
-    {% for message in get_flashed_messages() %}
-    <div>{{ message }}</div>
-    {% endfor %}
-    {% block content %}
-    {% endblock %}
-</body
+    <h1><a href='/' id='title'>BULLPEN</a></h1>
+    <link rel='stylesheet' type='text/css' href="{{ url_for('static', filename='main.css') }}">
+    <div class='user'>
+        {% if session['logged_in']  %}
+        <p>logged in as {{ session['user'] }}</p>
+        <p><a href='/logout'>Log Out</a></p>
+        <p><a href='/newpost'>New Post</a></p>
+        {% else %}
+        <p><a href='/login'>Log In</a></p>
+        <p><a href='/signup'>Sign up</a></p>
+        {% endif %}
+        </div>
+        {% for message in get_flashed_messages() %}
+        <div id='flash'><b>{{ message }}</b></div>
+        <div>
+        {% endfor %}
+        {% block content %}
+        {% endblock %}
+        </div>
+    </div>
+</body>

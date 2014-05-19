@@ -2,8 +2,8 @@ body {
     margin-left: 1em;
 }
 
-div {
-    margin-left: 2em;
+.content {
+    both: clear;
 }
 
 #title {
@@ -23,13 +23,16 @@ div {
 
 hr {
     clear: both;
+    margin-left: 1em;
 }
 
 ul {
     list-style-type: none;
+    both: clear;
 }
 
 #flash {
-    margin-left: 1em;
+    color: green;
+    background-color: blue;
     clear: both;
 }

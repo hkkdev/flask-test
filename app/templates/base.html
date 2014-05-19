@@ -14,13 +14,13 @@
         <p><a href='/login'>Log In</a></p>
         <p><a href='/signup'>Sign up</a></p>
         {% endif %}
-        </div>
-        {% for message in get_flashed_messages() %}
-        <div id='flash'><b>{{ message }}</b></div>
-        <div>
+        <a href='/logoutwtf'>lougoutwtf</a>
+    </div>
+    {% for message in get_flashed_messages() %}
+    <div id='flash'>{{ message }}</div>
+    <div class='content'>
         {% endfor %}
         {% block content %}
         {% endblock %}
-        </div>
     </div>
 </body>

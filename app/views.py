@@ -9,7 +9,7 @@ from app import app
 from werkzeug.security import generate_password_hash, \
                               check_password_hash
 from models import *
-from forms import LoginForm
+from forms import LoginForm, SignUpForm
 
 login_manager = LoginManager()
 login_manager.init_app(app)
@@ -96,6 +96,19 @@ def find_email(email):
         return True
     else:
         return False
+
+@app.route('/signupwtf', methods = ['GET', 'POST'])
+def signupwtf():
+    form = SignUpForm()
+    if form.validate_on_submit():
+        new_user = User(username=form.username.data, 
+                        password=set_password(form.password.data), 
+                        email=form.email.data)
+        db.session.add(new_user)
+        db.session.commit()
+        login_user(new_user)
+        return redirect(url_for('home'))
+    return render_template('signupwtf.html', form=form)
 
 @app.route('/signup', methods = ['GET', 'POST'])
 def signup():

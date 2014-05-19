@@ -1,6 +1,7 @@
 from flask_wtf import Form
 from wtforms import TextField, PasswordField
-from wtforms.validators import DataRequired, Length, ValidationError
+from wtforms.validators import DataRequired, Length, ValidationError, \
+                               EqualTo
 from models import *
 
 from werkzeug.security import generate_password_hash, \
@@ -28,6 +29,18 @@ class Password_Check(object):
            not check_password(user_in_db.password, field.data):
             raise ValidationError(self.message)
 
+class UserAvail(object):
+    def __init__(self, message=None):
+        if not message:
+            message = u'username exists'
+        self.message = message
+
+    def __call__(self, form, field):
+        user = form.username.data
+        user_in_db = User.query.filter_by(username=user).first()
+        if user_in_db:
+            raise ValidationError(self.message)
+
 class LoginForm(Form):
     username = TextField('username', validators=[
         DataRequired(message="Username required"),
@@ -36,6 +49,24 @@ class LoginForm(Form):
     password = PasswordField('password', validators=[
         DataRequired(message="Password required"),
         Password_Check()
+        ])
+
+class SignUpForm(Form):
+    username = TextField('username', validators=[
+        DataRequired(message="Username required"),
+        Length(min=4, max=25, message='Please check username'),
+        UserAvail()
+        ])
+    password = PasswordField('password', validators=[
+        DataRequired(message='password requred'),
+        EqualTo('verify', message='password does not match'),
+        Length(min=4, max=25, message='Invalid password')
+        ])
+    verify = PasswordField('verify', validators=[
+        DataRequired(message='need to verify password')
+        ])
+    email = TextField('email', validators=[
+        DataRequired(message='email required')
         ])
 
         

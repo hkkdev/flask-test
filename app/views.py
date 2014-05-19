@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
 # views.py
 
-from flask.ext.login import LoginManager, login_user, login_required
+from flask.ext.login import LoginManager, login_user, login_required, \
+                            current_user, logout_user
 from flask import Flask, request, session, g, redirect, url_for, \
                   render_template, flash
 from app import app
@@ -11,7 +13,8 @@ from forms import LoginForm
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'login'
+login_manager.login_view = 'loginwtf'
+login_manager.login_message = u'로그인 필요함'
 
 @login_manager.user_loader
 def load_user(userid):
@@ -37,15 +40,20 @@ def loginwtf():
         username = form.username.data
         user = User.query.filter_by(username=username).first()
         login_user(user)
-        flash('logged in successfully')
+        flash('%s, logged in successfully' % current_user.username)
         return redirect(url_for('home'))
     return render_template('loginwtf.html', form=form)
 
 @app.route('/testing')
 @login_required
 def testinglogin():
-    return "login works"
+    return "%s, login works" % current_user.username
 
+@app.route("/logoutwtf")
+@login_required
+def logoutwtf():
+    logout_user()
+    return redirect(url_for('loginwtf'))
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():

@@ -1,6 +1,21 @@
 body {
-    margin-left: 1em;
+    
 }
+
+.header {
+    float: left;
+    color: #bd643f;
+    margin: 0 auto;
+    padding: 10px;
+    font-size: x-large;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    
+}
+
+.header a {
+    text-decoration: none;
+}
+
 
 .content {
     both: clear;
@@ -27,11 +42,32 @@ hr {
 
 ul {
     list-style-type: none;
-    both: clear;
 }
 
 #flash {
-    color: green;
-    background-color: blue;
+    color: #6b3fbd;
     clear: both;
+    padding: 10px;
+    text-align: center;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+
+td, th {
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    text-align: left;
+}
+
+th {
+    background: lightblue;
+    border-color: white;
+    text-shadow: 0 0 5px rgba(0,0,0,0.5);
+}
+
+tbody tr:hover {
+    background: yellow;
 }

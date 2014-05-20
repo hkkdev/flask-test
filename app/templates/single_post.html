@@ -12,7 +12,7 @@
        </ul>
    </ul>
 </ul>
-{% if session['user'] %}
+{% if session['user'] or g.user.is_authenticated() %}
 {% block comments %}
 <div>
 <form method='POST'>

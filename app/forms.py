@@ -1,7 +1,7 @@
 from flask_wtf import Form
 from wtforms import TextField, PasswordField
 from wtforms.validators import DataRequired, Length, ValidationError, \
-                               EqualTo
+                               EqualTo, Regexp
 from models import *
 
 from werkzeug.security import generate_password_hash, \
@@ -66,7 +66,9 @@ class SignUpForm(Form):
         DataRequired(message='need to verify password')
         ])
     email = TextField('email', validators=[
-        DataRequired(message='email required')
+        Length(min=4, max=25, message='Invalid email'),
+        DataRequired(message='email required'),
+        Regexp(r'.+@.+', message='Invalid email')
         ])
 
         

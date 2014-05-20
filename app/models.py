@@ -2,6 +2,7 @@
 
 from app import app, db
 from flask.ext.sqlalchemy import SQLAlchemy
+import datetime
 
 USER = 0
 ADMIN = 1
@@ -11,6 +12,8 @@ class User(db.Model):
     username = db.Column(db.String(64), index = True, unique = True)
     email = db.Column(db.String(120), index = True, unique = True)
     password = db.Column(db.String(256))
+    date_created = db.Column(db.DateTime, 
+                             default=datetime.datetime.utcnow())
     role = db.Column(db.SmallInteger, default = USER)
     posts = db.relationship('Posts', 
                              backref = 'author', 
@@ -39,6 +42,8 @@ class Posts(db.Model):
     title = db.Column(db.Text(100), index = True)
     content = db.Column(db.Text(250), index = True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    date_created = db.Column(db.DateTime, 
+                             default=datetime.datetime.utcnow())
     comments = db.relationship('Comments',
                                 backref = 'post',
                                 lazy = 'dynamic')
@@ -49,6 +54,8 @@ class Posts(db.Model):
 class Comments(db.Model):
     id = db.Column(db.Integer, primary_key = True)
     comment = db.Column(db.Text(100), index = True)
+    date_created = db.Column(db.DateTime, 
+                             default=datetime.datetime.utcnow())
     post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 

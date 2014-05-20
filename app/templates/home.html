@@ -1,10 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
-<ul>
-    <hr>
-    
-    {% for post in posts %}
-    <li><a href='/post/{{ post.id }}'>{{ post.title }}</a> by <b>{{ post.author.username }}</b></li>
-    {% endfor %}
-</ul>
+<hr>
+<table>
+    <thead>
+        <tr>
+            <th>No.</th>
+            <th>Title</th>
+            <th>User</th>
+            <th>Date Created</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for post in posts %}
+        <tr>
+            <td>{{ post.id }}</td>
+            <td><a href='/post/{{ post.id }}'>{{ post.title }}</a></td>
+            <td><b>{{ post.author.username }}</b></td>
+            <td>{{ post.date_created }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}

@@ -14,7 +14,7 @@ from forms import LoginForm, SignUpForm
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'loginwtf'
-login_manager.login_message = u'로그인 필요함'
+login_manager.login_message = u'need to login'
 
 @login_manager.user_loader
 def load_user(userid):
@@ -26,6 +26,10 @@ def check_password(password, entered):
 
 def set_password(password):
     return generate_password_hash(password)
+
+@app.before_request
+def before_request():
+    g.user = current_user
 
 @app.route('/')
 def home():
@@ -52,6 +56,7 @@ def testinglogin():
 @app.route("/logoutwtf")
 @login_required
 def logoutwtf():
+    flash("%s, logged out." % g.user.username)
     logout_user()
     return redirect(url_for('loginwtf'))
 
@@ -172,7 +177,8 @@ def newpost():
             params['error'] = 'Need both title and content'
             return render_template('newpost.html', **params)
         else:
-            u = User.query.filter_by(username=session['user']).first()
+            u = g.user
+            
             new_entry = Posts(title = title,
                               content = content,
                               author = u
@@ -184,6 +190,8 @@ def newpost():
     
     # method GET
     else:
+        if g.user.is_authenticated():
+            return render_template('newpost.html')
         if not session.get('user', None):
             return redirect(url_for('home'))
         return render_template('newpost.html')
@@ -207,7 +215,6 @@ def entry(post_id):
             db.session.commit()
             ent = Posts.query.filter_by(id=post_id).first()
             com = Comments.query.filter_by(post_id=ent.id).all()
-            print com
             return render_template('single_post.html', 
                                    entry = ent,
                                    comments = com)
@@ -215,7 +222,6 @@ def entry(post_id):
 
     # GET
     else:
-        g.test = 1
         ent = Posts.query.filter_by(id=post_id).first()
         if ent:
             com = Comments.query.filter_by(post_id=ent.id).all()

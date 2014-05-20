@@ -13,16 +13,12 @@ from forms import LoginForm, SignUpForm
 
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'loginwtf'
+login_manager.login_view = 'login'
 login_manager.login_message = u'need to login'
 
 @login_manager.user_loader
 def load_user(userid):
     return User.query.get(int(userid))
-
-# some functions
-def check_password(password, entered):
-    return check_password_hash(password, entered)
 
 def set_password(password):
     return generate_password_hash(password)
@@ -37,8 +33,8 @@ def home():
     posts = Posts.query.limit(10)
     return render_template('home.html', posts = posts)
 
-@app.route('/loginwtf', methods=['Get', 'Post'])
-def loginwtf():
+@app.route('/login', methods=['Get', 'Post'])
+def login():
     form = LoginForm()
     if form.validate_on_submit():
         username = form.username.data
@@ -53,57 +49,16 @@ def loginwtf():
 def testinglogin():
     return "%s, login works" % current_user.username
 
-@app.route("/logoutwtf")
+@app.route("/logout")
 @login_required
-def logoutwtf():
+def logout():
     flash("%s, logged out." % g.user.username)
     logout_user()
-    return redirect(url_for('loginwtf'))
+    return redirect(url_for('login'))
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    have_error = False
-    if request.method == 'POST':
-        user = request.form['username']
-        pw = request.form['password']
-        u = User.query.filter_by(username=user).first()
-        
-        if not find_user(user):
-            have_error = True
-        elif not check_password(u.password, pw):
-            have_error = True
-        else:
-            session['user'] = user
-            session['logged_in'] = True
-            return redirect(url_for('home'))
-    if have_error:
-        error = 'Wrong username or password'
-        return render_template('login.html', error=error, username=user)
-    else:
-        return render_template('login.html')
 
-@app.route('/logout')
-def logout():
-    session.pop('user', None)
-    session.pop('logged_in', None)
-    flash('Your are logged out')
-    return redirect(url_for('home'))
-
-def find_user(user):
-    u = User.query.filter_by(username=user).first()
-    if u:
-        return True
-    else:
-        return False
-
-def find_email(email):
-    if User.query.filter_by(email=email).first():
-        return True
-    else:
-        return False
-
-@app.route('/signupwtf', methods = ['GET', 'POST'])
-def signupwtf():
+@app.route('/signup', methods = ['GET', 'POST'])
+def signup():
     form = SignUpForm()
     if form.validate_on_submit():
         new_user = User(username=form.username.data, 
@@ -114,56 +69,6 @@ def signupwtf():
         login_user(new_user)
         return redirect(url_for('home'))
     return render_template('signupwtf.html', form=form)
-
-@app.route('/signup', methods = ['GET', 'POST'])
-def signup():
-    if request.method == 'POST':
-        have_error = False
-        params = {}
-        user = request.form['username']
-        pw = request.form['password']
-        verify = request.form['verify']
-        email = request.form['email']
-        params['username'] = user
-        params['email'] = email
-
-        if not user:
-            params['error_username'] = 'Invalid username'
-            have_error = True
-        elif find_user(user):
-            params['error_username'] = 'Username exists'
-            have_error = True
-
-        if not pw:
-            params['error_password'] = 'Invalid password'
-            have_error = True
-        if not verify:
-            params['error_verify'] = 'Invalid password'
-            have_error = True
-        if pw != verify:
-            params['error_verify'] = 'Password does not match'
-            have_error = True
-        if not email:
-            params['error_email'] = 'Invalid email'
-            have_error = True
-        elif find_email(email):
-            params['error_email'] = 'Email already in use'
-            have_error = True
-
-        if have_error:
-            return render_template('signup.html', **params)
-        else:
-            new_user = User(username=user, 
-                            password=set_password(pw), 
-                            email=email)
-            db.session.add(new_user)
-            db.session.commit()
-            session['user'] = user
-            session['logged_in'] = True
-            return redirect(url_for('home'))
-
-    # method GET
-    return render_template('signup.html')
 
 @app.route('/newpost', methods = ['GET', 'POST'])
 def newpost():
@@ -178,7 +83,6 @@ def newpost():
             return render_template('newpost.html', **params)
         else:
             u = g.user
-            
             new_entry = Posts(title = title,
                               content = content,
                               author = u
@@ -190,13 +94,11 @@ def newpost():
     
     # method GET
     else:
-        if g.user.is_authenticated():
-            return render_template('newpost.html')
-        if not session.get('user', None):
+        if not g.user.is_authenticated():
             return redirect(url_for('home'))
         return render_template('newpost.html')
 
-@app.route('/post/<post_id>', methods = ['GET', 'POST'])
+@app.route('/post/<int:post_id>', methods = ['GET', 'POST'])
 def entry(post_id):
     if request.method == 'POST':
         comment = request.form['comment']
@@ -206,7 +108,7 @@ def entry(post_id):
 
         # valid comment adding to Comments
         else:
-            u = User.query.filter_by(username=session['user']).first()
+            u = g.user
             p = Posts.query.filter_by(id=post_id).first()
             c = Comments(comment = comment,
                          post = p,
@@ -218,9 +120,8 @@ def entry(post_id):
             return render_template('single_post.html', 
                                    entry = ent,
                                    comments = com)
-            
-
     # GET
+    # Show post and comments
     else:
         ent = Posts.query.filter_by(id=post_id).first()
         if ent:
@@ -229,7 +130,7 @@ def entry(post_id):
                                    entry = ent, 
                                    comments = com)
         else:
-            flash('Invalid post')
+            flash('Post does not exist')
             return redirect(url_for('home'))
 
 

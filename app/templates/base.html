@@ -5,21 +5,13 @@
 </head>
 <body>
     <div class='user'>
-        {% if session['logged_in']  %}
-        logged in as {{ session['user'] }}
-        <a href='/logout'>Log Out</a>
-        <a href='/newpost'>New Post</a>
-        {% else %}
-        <a href='/login'>Log In</a>
-        <a href='/signup'>Sign up</a>
-        {% endif %}
         {% if g.user.is_authenticated() %}
-        <a href='/logoutwtf'>lougoutwtf</a>
         you are {{ g.user.username }}
+        <a href='{{ url_for('logout') }}'>Log Out</a>
         {% else %}
-        <a href='/loginwtf'>loginwtf</a>
+        <a href='{{ url_for('login') }}'>Log In</a>
+        <a href='{{ url_for('signup') }}'>Sign Up</a>
         {% endif %}
-        <a href='/signupwtf'>signupwtf</a>
     </div>
     <div class='header'>
         <a href='/'>BULLPEN</a>

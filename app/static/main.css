@@ -3,10 +3,24 @@ body {
     
 }
 
+.post-title {
+    padding: 1em;
+}
+
+.post-content {
+    padding: 1em;
+    border: 5px solid gray;
+}
+
+.comments {
+    margin-left: 2em;
+}
+
 .header {
     float: left;
     color: #bd643f;
     margin: 0 auto;
+    margin-top: 2em;
     padding: 10px;
     font-size: x-large;
     text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
@@ -58,17 +72,24 @@ table {
 
 
 td, th {
-    border: 1px solid #ccc;
+    border: 0px solid #ccc;
     padding: 0.5rem;
     text-align: left;
 }
 
 th {
     background: lightblue;
-    border-color: white;
+    border-color: #ccc;
     text-shadow: 0 0 5px rgba(0,0,0,0.5);
 }
 
-tbody tr:hover {
-    background: yellow;
+.login {
+    border: 2px solid;
+    margin-right: auto;
+    max-width: 600px;
+}
+
+.form-login {
+    margin-left: auto;
+    margin-right: auto;
 }

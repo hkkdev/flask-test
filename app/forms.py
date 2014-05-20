@@ -66,7 +66,6 @@ class SignUpForm(Form):
         DataRequired(message='need to verify password')
         ])
     email = TextField('email', validators=[
-        Length(min=4, max=25, message='Invalid email'),
         DataRequired(message='email required'),
         Regexp(r'.+@.+', message='Invalid email')
         ])

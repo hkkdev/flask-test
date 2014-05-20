@@ -6,7 +6,8 @@
 <body>
     <div class='user'>
         {% if g.user.is_authenticated() %}
-        you are {{ g.user.username }}
+        Logged in as <b>{{ g.user.username }}</b>
+        <br>
         <a href='{{ url_for('logout') }}'>Log Out</a>
         {% else %}
         <a href='{{ url_for('login') }}'>Log In</a>

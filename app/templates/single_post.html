@@ -1,18 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
-<ul>
-    <hr>
-    <li>{{ entry.title }} by <b>{{ entry.author.username }}</b></li>
-    <ul>
-        <li>{{ entry.content }}</li>
-        <ul>
-           {% for com in comments %}
-           <li>{{ com.comment }} by {{ com.author.username }}</li>
-           {% endfor %} 
-       </ul>
-   </ul>
-</ul>
-{% if session['user'] or g.user.is_authenticated() %}
+<hr>
+<div class='post-title'>
+    {{ entry.title }} by <b>{{ entry.author.username }}</b></li>
+</div>
+<div class='post-content'>
+    {{ entry.content }}
+</div>
+<div class='comments'>
+    <table>
+       {% for com in comments %}
+       <tr>
+           <td>{{ com.comment }}</td>
+           <td>{{ com.author.username }}</td>
+           <td>{{ com.date_created }}</td>
+       </tr>
+       {% endfor %} 
+   </table>
+</div>
+{% if g.user.is_authenticated() %}
 {% block comments %}
 <div>
 <form method='POST'>

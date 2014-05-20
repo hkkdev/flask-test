@@ -5,26 +5,59 @@
 <hr>
 <form method='post' action=''>
     {{ form.hidden_tag() }}
-    {{ form.username.label }} {{ form.username(size=20) }}
-    {% for error in form.errors.username %}
-    <span style='color: red'>{{ error }}</span>
-    {% endfor %}
-    <br>
-    {{ form.password.label }} {{ form.password(size=20) }}
+    <table>
+        <tr>
+            <td>
+                {{ form.username.label }}
+            </td>
+            <td>
+                {{ form.username(size=20) }}
+            </td>
+                {% for error in form.errors.username %}
+            </td>
+            <td>
+                <span style='color: red'>{{ error }}</span>
+            </td>
+                {% endfor %}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                
+                {{ form.password.label }}</td><td> {{ form.password(size=20) }}
+</td>
     {% for error in form.errors.password %}
+    <td>
     <span style='color: red'>{{ error }}</span>
     {% endfor %}
-    <br>
-    {{ form.verify.label }} {{ form.verify(size=20) }}
+            </td>
+        </tr>
+        <tr>
+            <td>
+                {{ form.verify.label }}</td>
+            <td>
+                {{ form.verify(size=20) }}
+            </td>
     {% for error in form.errors.verify %}
+    <td>
     <span style='color: red'>{{ error }}</span>
+</td>
     {% endfor %}
-    <br>
-    {{ form.email.label }} {{ form.email(size=20) }}
+</tr>
+<tr>
+    <td>
+        {{ form.email.label }}</td> 
+    <td> {{ form.email(size=20) }}</td>
     {% for error in form.errors.email %}
-    <span style='color: red'>{{ error }}</span>
+    <td><span style='color: red'>{{ error }}</span></td>
     {% endfor %}
-    <br>
-    <input type='submit' value='Log In'>
+</tr>
+<tr>
+    <td>
+    </td>
+    <td>
+
+    <input type='submit' value='Sign Up'>
+</td>
 </form>
 {% endblock %}

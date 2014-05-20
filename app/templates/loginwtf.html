@@ -2,18 +2,29 @@
 {% extends "base.html" %}
 {% block content %}
 <hr>
-<form method='post' action=''>
+<div class='login'>
+    <form method='post' action='' >
     {{ form.hidden_tag() }}
-    {{ form.username.label }} {{ form.username(size=20) }}
-    {% for error in form.errors.username %}
-    <span style='color: red'>{{ error }}</span>
-    {% endfor %}
-    <br>
-    {{ form.password.label }} {{ form.password(size=20) }}
-    {% for error in form.errors.password %}
-    <span style='color: red'>{{ error }}</span>
-    {% endfor %}
-    <br>
-    <input type='submit' value='Log In'>
+    <table class='form-login'>
+        <tr>
+            
+            <td>{{ form.username.label }}</td>
+            <td>{{ form.username(size=20) }}</td>
+            {% for error in form.errors.username %}
+            <td><span style='color: red'>{{ error }}</span></td>
+        {% endfor %}
+        </tr>
+        <tr>
+            <td>{{ form.password.label }}</td>
+            <td>{{ form.password(size=20) }}</td>
+            {% for error in form.errors.password %}
+            <td><span style='color: red'>{{ error }}</span></td>
+            {% endfor %}
+        </tr>
+        <tr>
+            <td></td>
+            <td><input type='submit' value='Log In'></td>
+        </tr>
 </form>
+</div>
 {% endblock %}
